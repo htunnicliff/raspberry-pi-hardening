@@ -1,0 +1,80 @@
+# sshd_config file for Raspberry Pi systems
+# See https://www.chrisapproved.com/blog/raspberry-pi-hardening.html
+# See also https://infosec.mozilla.org/guidelines/openssh#modern-openssh-67
+
+# Listen on what port?
+# Using non-standard ports (such as 2020) helps reduce log noise
+#Port 22
+
+# Listen on which IP protocol (any, IPv4, IPv6)
+#AddressFamily any
+
+# Listen on which IP address? e.g. 192.168.0.1 useful with multiple IP interfaces
+#ListenAddress 0.0.0.0
+#ListenAddress ::
+
+# Support only ed25519 keys
+# https://ed25519.cr.yp.to/
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Ciphers and keying
+#RekeyLimit default none
+KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+
+# Logging
+#SyslogFacility AUTH
+LogLevel Verbose
+UsePrivilegeSeparation sandbox
+
+# Authentication:
+AuthenticationMethods publickey
+PubkeyAuthentication yes
+AllowGroups ssh-users
+PermitRootLogin no
+
+LoginGraceTime 10
+MaxAuthTries 2
+MaxSessions 2
+MaxStartups 2
+
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+
+HostbasedAuthentication no
+IgnoreRhosts yes
+
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+PasswordAuthentication no
+#PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# verify hostname matches IP
+UseDNS no
+
+# Not needed as we are doing certificate based authentication
+UsePAM no
+
+# Disable X11 Forwarding
+X11Forwarding no
+
+# disable port forwarding
+AllowTcpForwarding no
+AllowStreamLocalForwarding no
+GatewayPorts no
+PermitTunnel no
+Compression no
+TCPKeepAlive no
+AllowAgentForwarding no
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# override default of no subsystems
+Subsystem	sftp	/usr/lib/openssh/sftp-server -f AUTHPRIV -l INFO
