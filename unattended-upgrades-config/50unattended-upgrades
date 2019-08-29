@@ -1,9 +1,15 @@
 // Unattended-Upgrade::Origins-Pattern controls which packages are
 // upgraded.
 //
-// Modified for Raspberry Pi by Chris Goff.
-// Revision 1.1
-// Ref https://www.chrisapproved.com/blog/raspberry-pi-hardening.html
+// Modified for Raspberry Pi, Revision 1.1
+// Reference https://www.chrisapproved.com/blog/raspberry-pi-hardening.html
+
+// Instructions
+//
+// Make a backup of any existing 50unattended-upgrades file in /etc/apt/apt.conf.d/
+// Copy this file to /etc/apt/apt.conf.d/
+// Add your e-mail address to Unattended-Upgrade::Mail below
+// Make any other modifications you wish beyond the selected defaults
 
 // Enable the update/upgrade script (0=disable)
 APT::Periodic::Enable "1";
@@ -64,12 +70,6 @@ Unattended-Upgrade::Package-Blacklist {
 //   dpkg --force-confold --configure -a
 // The default is true, to ensure updates keep getting installed
 Unattended-Upgrade::AutoFixInterruptedDpkg "true";
-
-// Split the upgrade into the smallest possible chunks so that
-// they can be interrupted with SIGTERM. This makes the upgrade
-// a bit slower but it has the benefit that shutdown while a upgrade
-// is running is possible (with a small delay)
-//Unattended-Upgrade::MinimalSteps "true";
 
 // Install all updates when the machine is shutting down
 // instead of doing it in the background while the machine is running.
